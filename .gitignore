@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Created by .ignore support plugin (hsz.mobi)
 ### Example user template template
 ### Example user template
@@ -7,6 +8,8 @@
 *.iml
 out
 gen### Python template
+=======
+>>>>>>> ef3dcfe2b45a4e3d6e01c4301f91be91e7b22c13
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -111,4 +114,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+<<<<<<< HEAD
 
+=======
+>>>>>>> ef3dcfe2b45a4e3d6e01c4301f91be91e7b22c13
