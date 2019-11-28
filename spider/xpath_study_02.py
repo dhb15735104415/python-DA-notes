@@ -72,7 +72,7 @@ for i in ap_tags:
     print(i)
 
 '''
-    结果为：  为啥输了两遍a标签?
+    结果为：  为啥输了两遍a标签? 因为第二个<p>标签子节点都是<a>,find_all()找出全部符合条件的
     <p class="title"><b>The Dormouse's story</b></p>
     <p class="story">Once upon a time there were three little sisters; and their names were
     <a class="sister" href="http://example.com/elsie" id="link1">Elsie</a>,
