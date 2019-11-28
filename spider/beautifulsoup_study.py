@@ -23,7 +23,7 @@ html_text = """
 <p class="story">...</p>
 """
 # 用BeautifulSoup解析网页代码
-soup = BeautifulSoup(html_text, features="lxml")
+soup = BeautifulSoup(html_text, "lxml")
 print(type(soup))  # <class 'bs4.BeautifulSoup'>  BeautifulSoup对象
 print(soup)
 # 输出网页的文本内容
