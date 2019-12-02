@@ -67,7 +67,7 @@ if __name__ == '__main__':
     errolst = []
     for ui in urls:
         try:
-            datalst.extend(get_datas(ui, dic_h, dict_c))
+            datalst.extend(get_datas(ui, dict_h, dict_c))
             print('旅游景点数据采集成功，总共采集%i条数据' % len(datalst))
         except:
             errolst.append(ui)
