@@ -10,7 +10,7 @@
 import time
 import requests
 from bs4 import BeautifulSoup
-
+import re
 
 def get_urls(n):
     '''
@@ -32,9 +32,42 @@ def get_datas(ui, d_h, d_c):
     for li in lilst:
         dic = {}
         dic['书名'] = li.find('h2').find('a')['title']
-        dic['其他'] = li.find('div', class_='pub').text.replace(' ', '').replace('\n', '')
         dic['评价'] = li.find('div', class_="star clearfix").text.replace(' ', '').replace('\n', '')
         dic['简介'] = li.find('p').text.replace(' ', '').replace('\n', '')
+        # 用正则表达式优化’其他‘里的内容  将定价 年份等都识别出来
+        # dic['其他'] = li.find('div', class_='pub').text.replace(' ', '').replace('\n', '')
+        infors = re.sub(r'\s+', '', li.find('div', class_='pub').text)
+        print(infors)  # [美]鲍比·奥斯廷(BobbieO'Steen)/张晓元、丁舟洋/世界图书出版公司·后浪出版公司/2013-4/38.00元
+        # 处理定价
+        price = re.search(r'.*/([.\d]+)\D*', infors)
+        print(price)  # <re.Match object; span=(0, 62), match="[美]鲍比·奥斯廷(BobbieO'Steen)/张晓元、丁舟洋/世界图书出版公司·后浪出版公司/>
+        if price:
+            dic['定价'] = price.group(1)
+
+        # 处理作者
+        author = infors.split('/')[0]
+        print(author)
+        if author:
+            dic['作者'] = author
+
+        # 处理译者
+        interpreter = infors.split('/')[1]
+        print(interpreter)
+        if interpreter:
+            dic['译者'] = interpreter
+
+        # 处理出版社
+        publishing_house = infors.split('/')[2]
+        print(publishing_house)
+        if publishing_house:
+            dic['出版社'] = publishing_house
+
+        # 处理年份
+        date_data = re.search(r'/([-\d]+)/', infors)
+        print(date_data)  # <re.Match object; span=(48, 56), match='/2013-4/'>
+        if date_data:
+            dic['年份'] = date_data.group(1)
+
         resultlst.append(dic)
     return resultlst
 
