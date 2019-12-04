@@ -10,7 +10,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-
+import pymongo
 
 def get_urls(city, n):
     '''
@@ -25,9 +25,9 @@ def get_urls(city, n):
     return urllst
 
 
-def get_datas(ui, d_h, d_c):
+def get_datas(ui, d_h, d_c, table):
     '''
-    采集旅游景点信息
+    采集旅游景点信息,并储存到MongoDB中
     :param ui:分页url
     :param d_h:user-agent
     :param d_c:cookies
@@ -37,6 +37,7 @@ def get_datas(ui, d_h, d_c):
     soupi = BeautifulSoup(r.text, 'lxml')
     lilst = soupi.find('ul', class_="list_item clrfix").findAll('li')
     datalst = []
+    count = 0
     for li in lilst:
         dic = {}
         dic['景点名称'] = li.find('a').span.text
@@ -46,12 +47,13 @@ def get_datas(ui, d_h, d_c):
         dic['评分(百分制)'] = li.find('span', class_='total_star').span['style']
         dic['排名'] = li.find('span', class_='ranking_sum').text
         dic['驴友推荐程度'] = li.find('div', class_='txtbox clrfix').find('span').text
-        datalst.append(dic)
-    return datalst
+        table_travel_data.insert_one(dic)
+        count += 1
+    return count
 
 
 if __name__ == '__main__':
-    urls = get_urls('cs299914-beijing', 1)
+    urls = get_urls('cs299914-beijing', 3)
     dict_h = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
                             'Chrome/70.0.3538.25 Safari/537.36'}
     cookies = 'QN1=dXrgj13kuLeQIh+dBqZGAg==; QN205=organic; QN277=organic; _i=ueHd8gLHAWo9VZUA4D7odm4ZkIkX; ' \
@@ -62,23 +64,23 @@ if __name__ == '__main__':
     dict_c = {}
     for c in cookies.split('; '):
         dict_c[c.split('=')[0]] = c.split('=')[1]
-
-    datalst = []
+    myclient = pymongo.MongoClient('mongodb://localhost:27017')
+    db_qunaerw = myclient['去哪儿网']
+    table_travel_data = db_qunaerw['traveldata']
     errolst = []
+    count = 0  # 插入MongoDB成功条数
     for ui in urls:
         try:
-            datalst.extend(get_datas(ui, dict_h, dict_c))
-            print('旅游景点数据采集成功，总共采集%i条数据' % len(datalst))
+            count += get_datas(ui, dict_h, dict_c, table_travel_data)
+            print('旅游景点数据采集成功，总共采集%i条数据' % count)
         except:
             errolst.append(ui)
             print('旅游景点数据采集失败，失败%i条数据，网址为：%s' % (len(errolst), ui))
 
-    print(datalst)
-    datadf = pd.DataFrame(datalst)
-        # 数据清洗
-    datadf['点评数量'] = datadf['点评数量'].astype('int')
-    datadf['旅行攻略篇数'] = datadf['旅行攻略篇数'].astype('int')
-    datadf['评分(百分制)'] = datadf['评分(百分制)'].str.split(':').str[-1].str.replace('%', '').astype('int')
-    datadf['多少比例驴友来过'] = datadf['驴友推荐程度'].str.split('%').str[0].astype('float')/100
-
-    print(datadf)
+    # print(datalst)
+    # datadf = pd.DataFrame(datalst)
+    #     # 数据清洗
+    # datadf['点评数量'] = datadf['点评数量'].astype('int')
+    # datadf['旅行攻略篇数'] = datadf['旅行攻略篇数'].astype('int')
+    # datadf['评分(百分制)'] = datadf['评分(百分制)'].str.split(':').str[-1].str.replace('%', '').astype('int')
+    # datadf['多少比例驴友来过'] = datadf['驴友推荐程度'].str.split('%').str[0].astype('float')/100
