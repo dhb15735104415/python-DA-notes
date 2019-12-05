@@ -1,0 +1,61 @@
+浏览器测试框架：Selenium
+
+1、什么是Selenium?
+    1）概念
+        Selenium 是一套完整的web应用程序测试系统
+        Selenium的核心Selenium Core基于JsUnit，完全由JavaScript编写，因此可以用于任何支持JavaScript的浏览器上
+        Selenium测试直接运行在浏览器中，就像真正的用户在操作一样
+        支持的浏览器包括IE（7, 8, 9, 10, 11），Mozilla Firefox，Safari，Google Chrome，Opera等
+    优势
+        Selenium 测试直接在浏览器中运行，就像真实用户所做的一样
+        支持多种浏览器：Selenium 测试可以在 Windows、Linux 和 Macintosh上的 Internet Explorer、Chrome和 Firefox 中运行。其他测试工具都不能覆盖如此多的平台
+        可以较好地应对反爬措施
+    劣势
+        简单粗暴，但效率不高
+    2）如何安装
+        ① 安装python内置的selenium
+            pip3 install selenium
+            pip show selenium
+        ② 安装浏览器驱动
+            打开谷歌浏览器，查看自己的版本，设置页面网址：chrome://settings/help
+            chrome：http://chromedriver.storage.googleapis.com/index.html
+
+            下载后解压，放入自己的路径
+                例如：C:\Program Files (x86)\Google\Chrome\Application
+            添加环境变量
+                打开开始菜单->我的电脑（或计算机）->系统属性->高级系统设置->环境变量
+            变量里的path，在最后面添加;C:\Program Files (x86)\Google\Chrome\Application或者
+            在最前面添加C:\Program Files (x86)\Google\Chrome\Application，总之变量之间用分号隔开，修改完之后点击确定按钮保存配置
+2、如何用Selenium快速访问网页
+    1）导航：.get()
+        返回结果为WebDriver对象，网页测试窗口也进入对应网址
+        .current_url → 返回网页网址
+        .get_cookies() → 返回网页cookies
+
+3、提取网页数据
+    1）网页信息定位常用方法
+        定位单个元素
+        find_element_by_id
+        find_element_by_name
+        find_element_by_xpath
+        find_element_by_link_text
+        find_element_by_partial_link_text
+        find_element_by_tag_name
+        find_element_by_class_name
+        find_element_by_css_selector
+        定位一组元素，返回1个list（类似bs里的find_all()）
+        find_elements_by_name
+        find_elements_by_xpath
+        find_elements_by_link_text
+        find_elements_by_partial_link_text
+        find_elements_by_tag_name
+        find_elements_by_class_name
+        find_elements_by_css_selector
+    2）定位方法选择顺序
+        顺序方法（以下方法也是核心方法）
+            按xpath：find_element_by_xpath
+            按属性定位：find_element_by_id 或者 find_element_by_class_name
+            按照标签名定位：find_element_by_tag_name
+        需要采集链接时（a标签的href、img标签的src）
+            不建议用find_element_by_link_text（按照链接文本定位）
+            直接通过核心方法先识别a标签，然后通过get_attribute(href)获得链接

@@ -4,6 +4,12 @@
 # @Author  : duanhaobin
 # @File    : test_driver.py
 # @Software: PyCharm
-# @desc:
+# @desc:   测试google webdriver是否安装好
+
+from selenium import webdriver
+
+chrome_driver = 'F:\GoogleWebDriver\chromedriver.exe'
+browser = webdriver.Chrome(executable_path=chrome_driver)
+    # 启动webDriver
 
 

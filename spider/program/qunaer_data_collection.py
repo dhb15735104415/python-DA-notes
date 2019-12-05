@@ -47,7 +47,7 @@ def get_datas(ui, d_h, d_c, table):
         dic['评分(百分制)'] = li.find('span', class_='total_star').span['style']
         dic['排名'] = li.find('span', class_='ranking_sum').text
         dic['驴友推荐程度'] = li.find('div', class_='txtbox clrfix').find('span').text
-        table_travel_data.insert_one(dic)
+        table.insert_one(dic)
         count += 1
     return count
 
