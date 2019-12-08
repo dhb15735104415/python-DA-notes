@@ -8,6 +8,7 @@
 
 
 import re
+import csv
 import requests
 import pymongo
 from bs4 import BeautifulSoup
@@ -63,6 +64,39 @@ def get_datas(ui, h_dic, c_dic, table):
     return n
 
 
+def export_csv(table):
+    '''
+    导出至csv文件
+    :param table:MongoDB集合对象
+    :return:
+    '''
+    with open(f"Blibili弹幕数据.csv", "w", newline='', encoding='utf-8') as csvfileWriter:
+        writer = csv.writer(csvfileWriter)
+        # 先写列名
+        # 写第一行，字段名
+        fieldList = [
+            "_id",
+            "视频名称",
+            "视频发布时间",
+            "弹幕内容",
+            "其他",
+        ]
+        writer.writerow(fieldList)
+
+        allRecordRes = table.find()
+        # 写入多行数据
+        for record in allRecordRes:
+            recordValueLst = []
+            for field in fieldList:
+                if field not in record:
+                    recordValueLst.append("None")
+                else:
+                    recordValueLst.append(record[field])
+            try:
+                writer.writerow(recordValueLst)
+            except Exception as e:
+                print(f"write csv exception. e = {e}")
+
 if __name__ == "__main__":
     h_dic = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) '
                            'Chrome/70.0.3538.25 Safari/537.36 Core/1.70.3741.400 QQBrowser/10.5.3863.400'}
@@ -86,12 +120,14 @@ if __name__ == "__main__":
     dm_collection = db['danmu数据']
     count = 0
     errorlst = []
-    for ui in urls:
+    for ui in urls[:3]:
         try:
             count += get_datas(ui, h_dic, c_dic, dm_collection)
             print("采集Bilibili弹幕数据成功，共采集%i条数据" % count)
-        except:
+        except Exception as e:
             errorlst.append(ui)
             print("采集Bilibili弹幕数据异常，数据网址为：", ui)
+            print('异常为:', e)
 
-    print(errorlst)
+    # 将MongoDB中的数据导出并保存成csv文件
+    export_csv(dm_collection)
