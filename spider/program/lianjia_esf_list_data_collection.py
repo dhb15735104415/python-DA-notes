@@ -78,7 +78,7 @@ def data_cleaning(table,table_new):
         lc_info = d['楼层情况']
         tmp_lc = re.search(r'(\D+)层', lc_info)
         if tmp_lc:
-            d['楼层'] = tmp_lc.group(1)
+            d['楼层'] = tmp_lc.group(1) + '层'
         tmp_lc_number = re.search(r'(\d+)层', lc_info)
         if tmp_lc_number:
             d['层数'] = int(tmp_lc_number.group(1))
