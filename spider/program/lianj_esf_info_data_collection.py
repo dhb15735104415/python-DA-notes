@@ -4,7 +4,7 @@
 # @Author  : duanhaobin
 # @File    : lianj_esf_info_data_collection.py
 # @Software: PyCharm
-# @desc:   lianj esf详细信息数据采集及清洗
+# @desc:   lianj esf详细信息数据采集(动态代理ip)及清洗
 
 import re
 import requests
@@ -37,11 +37,10 @@ def get_proxies(p_User, p_Pass, p_Host, p_Port):
     return ips
 
 
-
 def test_ips():
     ips = get_proxies('H4K7A67RE7V39C1D', '2D53906310122580', 'http-dyn.abuyun.com', '9020')
     url = 'https://bj.lianjia.com/ershoufang/101105294964.html'
-    result = requests.get(url=url, headers=h_dic,proxies=ips)
+    result = requests.get(url=url, headers=h_dic, proxies=ips)
 
     print(result)
 
@@ -77,7 +76,7 @@ def get_datas(u, h_dic, ips, table):
     position = re.search(r"resblockPosition:'([.\d]+),([\d.]+)'", r.text)
     dic['lng'] = position.group(1)  # 经度
     dic['lat'] = position.group(2)  # 纬度
-        # 经纬度  坐标拾取器大致识别,然后再根据坐标去页面查找
+    # 经纬度  坐标拾取器大致识别,然后再根据坐标去页面查找
     table.insert_one(dic)
 
 
@@ -122,7 +121,7 @@ if __name__ == '__main__':
     myclient = pymongo.MongoClient('mongodb://localhost:27017')
     db = myclient['链家esf数据01']
     table_collection_orgin = db['esf_list_data01_new']  # 源数据MongoDB集合对象
-    table_collection = db['esf_infor_data']  #  采集详细房源数据MongoDB集合对象
+    table_collection = db['esf_infor_data']  # 采集详细房源数据MongoDB集合对象
     table_collection.delete_many({})
     table_collection_new = db['esf_infor_data_clean']  # 清洗详细房源数据MongoDB集合对象
 
