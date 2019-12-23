@@ -1,0 +1,12 @@
+详细请参考:https://blog.csdn.net/luanpeng825485697/article/details/78508819
+
+Matplotlib学习:
+图标基本要素:
+
+![avatar](https://img-blog.csdn.net/20171112105147634?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbHVhbnBlbmc4MjU0ODU2OTc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+
+![avatar](https://img-blog.csdn.net/20171112141138664?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbHVhbnBlbmc4MjU0ODU2OTc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+
+在绘图结构中，figure创建窗口，subplot创建子图。所有的绘画只能在子图上进行。plt表示当前子图，若没有就创建一个子图。所有你会看到一些教程中使用plt进行设置，一些教程使用子图属性进行设置。他们往往存在对应功能函数。
